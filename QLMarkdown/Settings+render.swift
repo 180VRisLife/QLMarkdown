@@ -743,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
     button.textContent = 'Copy';
     button.setAttribute('aria-label', 'Copy code to clipboard');
 
-    button.addEventListener('click', function() {
+    function copyCode() {
       const code = pre.querySelector('code') || pre;
       const text = code.textContent;
 
@@ -761,6 +761,28 @@ document.addEventListener('DOMContentLoaded', function() {
           button.textContent = 'Copy';
         }, 2000);
       });
+    }
+
+    // Copy on button click
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      copyCode();
+    });
+
+    // Copy on wrapper click, but only if no text is selected
+    wrapper.addEventListener('click', function(e) {
+      // Don't copy if clicking the button (already handled above)
+      if (e.target === button) {
+        return;
+      }
+
+      // Don't copy if user has selected text
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) {
+        return;
+      }
+
+      copyCode();
     });
 
     wrapper.appendChild(button);

@@ -650,6 +650,7 @@ input[type="checkbox"] {
 /* Copy button styles */
 .markdown-body .code-block-wrapper {
   position: relative;
+  cursor: pointer;
 }
 
 .markdown-body .copy-button {
@@ -664,13 +665,15 @@ input[type="checkbox"] {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--textPrimary);
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.6;
   transition: opacity 0.2s, background-color 0.2s;
   -webkit-user-select: none;
   user-select: none;
+  z-index: 10;
 }
 
-.markdown-body .code-block-wrapper:hover .copy-button {
+.markdown-body .code-block-wrapper:hover .copy-button,
+.markdown-body .copy-button:hover {
   opacity: 1;
 }
 
