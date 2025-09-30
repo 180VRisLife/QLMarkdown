@@ -25,3 +25,5 @@ highlight-wrapper/file-5.46/tests/Makefile
 /*/.idea/
 
 *.dSYM
+
+build/
