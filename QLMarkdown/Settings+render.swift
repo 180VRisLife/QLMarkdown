@@ -722,6 +722,53 @@ MathJax = {
         let wrapper_open = self.renderAsCode ? "<pre class='hl'>" : "<article class='markdown-body'>"
         let wrapper_close = self.renderAsCode ? "</pre>" : "</article>"
         let body_style = self.renderAsCode ? " class='hl'" : ""
+
+        // Add copy button script
+        let copyButtonScript = """
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Wrap all pre elements in a wrapper div and add copy button
+  document.querySelectorAll('pre').forEach(function(pre) {
+    if (pre.parentElement.classList.contains('code-block-wrapper')) {
+      return; // Already wrapped
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.textContent = 'Copy';
+    button.setAttribute('aria-label', 'Copy code to clipboard');
+
+    button.addEventListener('click', function() {
+      const code = pre.querySelector('code') || pre;
+      const text = code.textContent;
+
+      navigator.clipboard.writeText(text).then(function() {
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        setTimeout(function() {
+          button.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy:', err);
+        button.textContent = 'Error';
+        setTimeout(function() {
+          button.textContent = 'Copy';
+        }, 2000);
+      });
+    });
+
+    wrapper.appendChild(button);
+  });
+});
+</script>
+"""
+
         let html =
 """
 <!doctype html>
@@ -738,6 +785,7 @@ MathJax = {
 \(body)
 \(wrapper_close)
 \(s_footer)
+\(copyButtonScript)
 </body>
 </html>
 """
