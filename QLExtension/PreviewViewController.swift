@@ -244,9 +244,18 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         
         let appearance: Appearance = Settings.isLightAppearance ? .light : .dark
         let text = try settings.render(file: markdown_url, forAppearance: appearance, baseDir: markdown_url.deletingLastPathComponent().path)
-        
-        let html = settings.getCompleteHTML(title: url.lastPathComponent, body: text, footer: "", basedir: url.deletingLastPathComponent(), forAppearance: appearance)
-            
+
+        // Read the raw markdown content for the copy button
+        let rawMarkdown: String
+        if let data = FileManager.default.contents(atPath: markdown_url.path),
+           let markdownString = String(data: data, encoding: .utf8) {
+            rawMarkdown = markdownString
+        } else {
+            rawMarkdown = ""
+        }
+
+        let html = settings.getCompleteHTML(title: url.lastPathComponent, body: text, footer: "", basedir: url.deletingLastPathComponent(), forAppearance: appearance, rawMarkdown: rawMarkdown)
+
         return html
     }
 }

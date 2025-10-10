@@ -613,11 +613,11 @@ table.debug td {
         return try self.render(text: markdown_string, filename: filename, forAppearance: appearance, baseDir: baseDir)
     }
     
-    func getCompleteHTML(title: String, body: String, header: String = "", footer: String = "", basedir: URL, forAppearance appearance: Appearance) -> String {
-        
+    func getCompleteHTML(title: String, body: String, header: String = "", footer: String = "", basedir: URL, forAppearance appearance: Appearance, rawMarkdown: String = "") -> String {
+
         let css_doc: String
         let css_doc_extended: String
-        
+
         var s_header = header
         var s_footer = footer
         
@@ -723,10 +723,48 @@ MathJax = {
         let wrapper_close = self.renderAsCode ? "</pre>" : "</article>"
         let body_style = self.renderAsCode ? " class='hl'" : ""
 
+        // Escape the raw markdown content for embedding in JavaScript
+        let escapedMarkdown = rawMarkdown
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "$", with: "\\$")
+
+        // Add global copy button HTML
+        let globalCopyButton = rawMarkdown.isEmpty ? "" : """
+<button id="global-copy-button" class="global-copy-button" aria-label="Copy entire raw markdown to clipboard">
+  Copy Raw Markdown
+</button>
+"""
+
         // Add copy button script
         let copyButtonScript = """
 <script>
+// Store raw markdown content
+const rawMarkdownContent = `\(escapedMarkdown)`;
+
 document.addEventListener('DOMContentLoaded', function() {
+  // Global copy button functionality
+  const globalCopyButton = document.getElementById('global-copy-button');
+  if (globalCopyButton) {
+    globalCopyButton.addEventListener('click', function() {
+      navigator.clipboard.writeText(rawMarkdownContent).then(function() {
+        const originalText = globalCopyButton.textContent;
+        globalCopyButton.textContent = 'Copied!';
+        globalCopyButton.classList.add('copied');
+        setTimeout(function() {
+          globalCopyButton.textContent = originalText;
+          globalCopyButton.classList.remove('copied');
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy:', err);
+        globalCopyButton.textContent = 'Error';
+        setTimeout(function() {
+          globalCopyButton.textContent = 'Copy Raw Markdown';
+        }, 2000);
+      });
+    });
+  }
+
   // Wrap all pre elements in a wrapper div and add copy button
   document.querySelectorAll('pre').forEach(function(pre) {
     if (pre.parentElement.classList.contains('code-block-wrapper')) {
@@ -803,6 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
 \(s_header)
 </head>
 <body\(body_style)>
+\(globalCopyButton)
 \(wrapper_open)
 \(body)
 \(wrapper_close)

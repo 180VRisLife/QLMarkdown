@@ -647,6 +647,45 @@ input[type="checkbox"] {
     }
 }
 
+/* Global copy button styles */
+.global-copy-button {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  padding: 8px 16px;
+  background-color: var(--code-background);
+  border: 1px solid var(--thead-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--textPrimary);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, background-color 0.2s, transform 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.global-copy-button:hover {
+  opacity: 1;
+  background-color: var(--thead-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.global-copy-button:active {
+  transform: scale(0.97);
+}
+
+.global-copy-button.copied {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+  opacity: 1;
+}
+
 /* Copy button styles */
 .markdown-body .code-block-wrapper {
   position: relative;
