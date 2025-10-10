@@ -27,3 +27,7 @@ highlight-wrapper/file-5.46/tests/Makefile
 *.dSYM
 
 build/
+
+# Build logs
+*.log
+build*.log
