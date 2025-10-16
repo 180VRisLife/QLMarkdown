@@ -335,17 +335,9 @@ for url in files {
         let text = try settings.render(file: markdown_url, forAppearance: appearance, baseDir: markdown_url.deletingLastPathComponent().path)
         
         let html = settings.getCompleteHTML(title: url.lastPathComponent, body: text, basedir: markdown_url.deletingLastPathComponent(), forAppearance: appearance)
-        
+
         settings.renderStats += 1
-        if settings.renderStats > 0 && settings.renderStats % 100 == 0 {
-            print("""
-*** *** *** *** *** ***
-Thanks to this application you have viewed over \(settings.renderStats) files.
-If you find it useful and you have the possibility, consider buying me a coffee! (https://buymeacoffee.com/sbarex)
-*** *** *** *** *** ***
-""")
-        }
-        
+
         var output: URL?
         if let dest = dest {
             var isDir: ObjCBool = false

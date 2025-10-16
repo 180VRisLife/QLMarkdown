@@ -218,19 +218,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         
         let settings = Settings.shared
         settings.renderStats += 1
-        
-        let no_nag = UserDefaults.standard.bool(forKey: "qlmarkdown-no-nag-screen")
-        if !no_nag && settings.renderStats > 0 && settings.renderStats % 100 == 0, let msg = self.getBundleContents(forResource: "stats", ofType: "html") {
-            let icon: String
-            if let url = Bundle.main.url(forResource: "icon", withExtension: "png"), let data = try? Data(contentsOf: url) {
-                icon = data.base64EncodedString()
-            } else {
-                icon = ""
-            }
-            
-            return msg.replacingOccurrences(of: "%n_files%", with: "\(settings.renderStats)").replacingOccurrences(of: "%icon_path%", with: "data:image/png;base64,\(icon)")
-        }
-        
+
         let markdown_url: URL
         if let typeIdentifier = (try? url.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier, typeIdentifier == "org.textbundle.package" {
             if FileManager.default.fileExists(atPath: url.appendingPathComponent("text.md").path) {
